@@ -1,0 +1,9 @@
+# 190313
+# HFO analysis of sEEG data morphology detector
+# Patient: SO (10 Ece Count, 1 SCiRep Count)
+
+# Data for Analysis (channel mPHR1_mPHR2)
+\\fl-daten\NCH_Forschungen\NCH_FL_Forschungsprojekte\Epilepsy\_EceFO\Variability of HFO Rates in Invasive Sleep Recordings\Bipolar Data\Patient 10 SO\Recording 01\Interval 01\Bipolar_Data_Patient_10_SO_Recording_01_Interval_01_Channel_021_mPHR1_mPHR2.mat
+
+# Analysis Results
+\\fl-daten\NCH_Forschungen\NCH_FL_Forschungsprojekte\Epilepsy\_EceFO\Variability of HFO Rates in Invasive Sleep Recordings\HFO Analysis Results Subintervals\Patient 10 SO\HFO_Analysis_Results_Patient_10_Recording_01_Interval_101.mat

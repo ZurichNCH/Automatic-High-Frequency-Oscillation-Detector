@@ -1,0 +1,4 @@
+# 190315
+# HFO analysis of iEEG data via spectrum detector
+
+\\fl-daten\NCH_Forschungen\NCH_FL_Forschungsprojekte\Epilepsy\17 and earlier\170831 HFO DATA UPLOAD\iEEG_sleepHFO\pat_01_night_01_interval_01.mat
