@@ -2,9 +2,9 @@
 **This code is still in development and as such welcomes suggestions and makes no promises.**
 ---
 This code is intended to be used for the detection of High Frequency Oscillations (HFO) in the following data:
-* Electroencephalogram EEG (Untested)
-* Electrocorticography ECog (Tested)
-* intra-cranial Electroencephalogram iEEG (Tested)
+* Electroencephalography EEG (Untested)
+* Electrocorticography ECoG (Tested)
+* Intracranial electroencephalography iEEG (Tested)
 
 ## Introduction
 ### HFO working definition
@@ -12,8 +12,7 @@ HFO are recognized as biomarkers for epileptogenic brain tissue. HFOs are genera
 
 
 ### Uses of HFO
-Interictal HFOs have proven more specific in localizing the seizure onset zone (SOZ) than spikes and have presented a good association with the
-post-surgery outcome in epilepsy patients. We thus validated the clinical relevance of the HFO area in the individual patient with an automated procedure. This is a prerequisite before HFOs can guide surgical treatment in multi-centre studies.
+Interictal HFOs have proven more specific in localizing the seizure onset zone (SOZ) than spikes and have presented a good association with the post-surgical outcome in epilepsy patients. We thus validated the clinical relevance of the HFO area in the individual patient with an automated procedure. This is a prerequisite before HFOs can guide surgical treatment in multi-centre studies.
 
 
 ### Research Papers
