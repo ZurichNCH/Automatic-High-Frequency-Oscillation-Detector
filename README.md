@@ -1,6 +1,6 @@
 
 # Automatic High Frequency Oscillation Detection (AHFOD) 
-**This code is still in development and as such welcomes suggestions and makes no promises.**
+**This code is still in development and as such welcomes suggestions.**
 ---
 This code is intended to be used for the detection of High Frequency Oscillations (HFO) in the following data:
 * Electroencephalogram EEG (Untested)
