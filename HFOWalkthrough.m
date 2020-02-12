@@ -1,17 +1,25 @@
-% This script is created with the purpose of serving as tutorial on AHFOD
-% start by clearing the work space and console
+% This is a walkthrough for the package
+% Automatic-High-Frequency-Oscillation-Detector
 
-%% %%%%%%%%%%%%%%%%%%%%%%%% Basics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Close all figures, clear variables and command window
+close all
 clear
 clc
+
+%% Add the package to path
+strPaths.HFODetector = '\\fl-daten\nch_forschungen\NCH_FL_Forschungsprojekte\Epilepsy\_Andries\Project_HFO Detector\Automatic-High-Frequency-Oscillation-Detector\';
+addpath(genpath(strPaths.HFODetector))
+
 %% Basic data-structure of this code is the hfo-object which is used as follows:
-%create an hfo-object by calling the following:
-hfo =  Core.HFO;
-%% specify .mat-filepaths to parameters and data (see readme for format of these files)
-hfo.ParaFileLocation = [pwd, '/+Demo/ZurichDemo1Spec/Parameters/RSpecPara.mat'];
+% Create an hfo-object by calling the following:
+hfo = Core.HFO;
+
+%% The data and parameters can be loaded from 
+%% Specify the paths for .mat files for the parameters and date (see README for format of these files)
+%% Parameters
+hfo.ParaFileLocation = [strPaths.HFODetector, '/+Demo/Spec/ECoG/Parameters/RSpecPara.mat'];
 % see the contents of the folder "PresetParameterCreator" for the format.
-hfo.DataFileLocation = [pwd, '/+Demo/ZurichDemo1Spec/Data/Data.mat'];
+hfo.DataFileLocation = [strPaths.HFODetector, '/+Demo/Spec/ECoG/Data/Data.mat'];
 % Data must be called "data" and must contain the following fields
 % data.Datasetup
 % data.x_bip 
@@ -23,12 +31,12 @@ chanContains    = '';
 hfo = getParaAndData(hfo, chanContains);%, data);
 % data: optional imput to overide the file path, useful for running from
 % work space. Must be in correct format.
-%% This step produces filtered siganl based on specification given in the
+%% This step produces filtered signal based on specification given in the
 % parameters file. The envelope of the filtered signal is also computed.
 smoothBool = false;
 hfo = getFilteredSignal(hfo, smoothBool);
 % smoothBool: boolean value specifying if the envelope is to be smoothed.
-%% Events are described in contradisticiton to the background which is
+%% Events are described in contradiction to the background which is
 % defind by the baseline. This code computes the baseline using entropy.
 hfo = getBasline(hfo); 
 %% Events are detected by various means
@@ -37,12 +45,12 @@ CondMulti = true;
 hfo = getEvents(hfo, RefType, CondMulti);
 % RefType: is a string value, either 'morph' or 'spec'
 % CondMulti: is a boolean value that determines multi-channel analysis
-%% Visualiye the HFO by calling
+%% Visualize the HFO by calling
 SigString = 'filt';
 chanInd = [1,2,3];
 Visualizations.VisualizeHFO(hfo, SigString, chanInd)
 % SigString: is a string variable which is either: 'filt' or 'raw'
-% chanInd: are the indeces of the channels from which to view the data
+% chanInd: are the indices of the channels from which to view the data
 %% %%%%%%%%%%%%%%%%%%%%%%%% Wrapped %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear
