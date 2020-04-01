@@ -95,7 +95,7 @@ classdef CoOccurence
                    if isempty(eventIndeces)
                        continue
                    end
-                   for jChan = (iChan+1):nbChan
+                   for jChan = 1:nbChan
                        eventCoOcc = find(cellfun(@(x) any(intersect(x, eventIndeces)),indeces{jChan}));
                        if ~isempty(eventCoOcc)
                            CoOcMap{iChan}{iEvent} = [CoOcMap{iChan}{iEvent}, [repmat(jChan,1,length(eventCoOcc)); eventCoOcc]];
@@ -119,12 +119,12 @@ classdef CoOccurence
                        CoOcBlock{iCount} =[[iChan; iEvent] ,CoOcMap{iChan}{iEvent}];
                        CoOcMap{iChan}{iEvent} = [];
                    end
-                   for iOtherEvents = 1:nbOtherEvents
-                       rChan = CoOcBlock{iCount}(1,iOtherEvents);
-                       rEvent = CoOcBlock{iCount}(2,iOtherEvents);
-                       CoOcBlock{iCount} = [CoOcBlock{iCount}, CoOcMap{rChan}{rEvent}];
-                       CoOcMap{rChan}{rEvent} = [];
-                   end
+%                  for iOtherEvents = 1:nbOtherEvents
+%                       rChan = CoOcBlock{iCount}(1,iOtherEvents);
+%                       rEvent = CoOcBlock{iCount}(2,iOtherEvents);
+%                       CoOcBlock{iCount} = [CoOcBlock{iCount}, CoOcMap{rChan}{rEvent}];
+%                       CoOcMap{rChan}{rEvent} = [];
+%                   end
                    if nbOtherEvents ~= 0
                        CoOcBlock{iCount} = unique(CoOcBlock{iCount}','rows','stable')';
                        iCount = iCount + 1;
@@ -156,11 +156,11 @@ classdef CoOccurence
                isRight    = any(contains(chanNamesOFBlock,{'2' '4' '6' '8'}));
                % excluded events: conra-laterality
                if (isLeft && isRight)
-                   for iBlockEntries = 1:size(block,2)
-                       rChan  = block(1,iBlockEntries);
-                       rEvent = block(2,iBlockEntries);
+                  % for iBlockEntries = 1:size(block,2)
+                       rChan  = block(1,1);
+                       rEvent = block(2,1);
                        CoOccMask{rChan}(rEvent) = 0;
-                   end
+                  % end
                end
                
            end
