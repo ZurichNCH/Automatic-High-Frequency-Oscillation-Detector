@@ -68,6 +68,7 @@ classdef CoOccurence
        %% Obtaining co-occuring same HFO over multiple channels
        
        function MultChanCoOcc = getMultChanCoOccurece(HFOobj,LetSlipMask)
+            
             indeces                     = HFOobj.Events.Properties.EventData.indeces;
             nbChan                      = HFOobj.Data.nbChannels;
             chanNames                   = HFOobj.Data.channelNames;
@@ -82,6 +83,7 @@ classdef CoOccurence
             Block = Core.CoOccurence.getCoOccurenceBlock(Map, nbChan);
             MultChanCoOcc.Block = Block;
             MultChanCoOcc.Mask  = Core.CoOccurence.getCoOccurenceMask(Block,nbChan,chanNames,indeces);
+           
         end
 
        function Map = getCoOccurenceMap(indeces)
@@ -113,9 +115,12 @@ classdef CoOccurence
            iCount = 1;
            for iChan = 1:nbChan
                nbEvent = length(CoOcMap{iChan});
+            %   disp(nbEvent);
                for iEvent = 1:nbEvent
                    nbOtherEvents = size(CoOcMap{iChan}{iEvent},2);
+             %      disp(nbOtherEvents);
                    if nbOtherEvents ~= 0
+                 
                        CoOcBlock{iCount} =[[iChan; iEvent] ,CoOcMap{iChan}{iEvent}];
                        CoOcMap{iChan}{iEvent} = [];
                    end
@@ -130,11 +135,12 @@ classdef CoOccurence
                        iCount = iCount + 1;
                    end
                end
-               if isempty([CoOcMap{:}]) || isequal([CoOcMap{:}],{[]}) || (nbEvent == 0)
-                   CoOcBlock = {};
-               end
+%                if isempty([CoOcMap{:}]) || isequal([CoOcMap{:}],{[]}) || (nbEvent == 0)
+%                    CoOcBlock = {};
+%                end
            end
            Blocks = CoOcBlock;
+           length(Blocks)
        end
        
        function CoOccMask = getCoOccurenceMask(CoOccBlocks,nbChan,chanNames,indeces)
@@ -146,8 +152,9 @@ classdef CoOccurence
            end
            
            nbBlocks = length(CoOccBlocks);
+
            for iBlock = 1:nbBlocks
-               block = CoOccBlocks{iBlock};
+               block = CoOccBlocks{iBlock}; 
                if isempty(block)
                    continue
                end
@@ -155,11 +162,14 @@ classdef CoOccurence
                isLeft     = any(contains(chanNamesOFBlock,{'1' '3' '5' '7'}));
                isRight    = any(contains(chanNamesOFBlock,{'2' '4' '6' '8'}));
                % excluded events: conra-laterality
+
+       % isLeft && isRight
                if (isLeft && isRight)
+        
                   % for iBlockEntries = 1:size(block,2)
                        rChan  = block(1,1);
                        rEvent = block(2,1);
-                       CoOccMask{rChan}(rEvent) = 0;
+                       CoOccMask{rChan}(rEvent) = 0; %dori new
                   % end
                end
                

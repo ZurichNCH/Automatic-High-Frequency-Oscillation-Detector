@@ -2,14 +2,16 @@ classdef ParaAndData
     properties
         %Input
         ParaFileLocation
-        DataFileLocation
+        DataFileLocation      
         %Output
         Para
         Data
     end
-    methods
+    methods     
         %% Load predetermined parameters from a saved .mat file
         function obj = loadParameters(obj)
+            % input: location of parameter files.mat (string) format
+            % output: loaded parameters
             if ischar(obj.ParaFileLocation)
                 load(obj.ParaFileLocation);
                 obj.Para = DetPara;
@@ -25,35 +27,39 @@ classdef ParaAndData
         
         %% Load data and relavant meta-data
         function obj = loadData(obj, chanContains)
+            %input: Parameters, Data file location.mat (string) and cell of
+            %channel names (cell of strings)
+            %output: Loaded data and computed meta data
             maxToJoinPARA = obj.Para.maxIntervalToJoinPARA;
             MinHiEntrPARA = obj.Para.MinHighEntrIntvLenPARA;
             minETPARA     = obj.Para.minEventTimePARA;
-            durBaseline   = obj.Para.DurBaseline;
-            startBaseline = obj.Para.startBaseline;
+            maxETPARA     = obj.Para.maxEventTimePARA;
+            durBaseline   = obj.Para.DurBaseline; 
+            startBasline  = obj.Para.startBaseline;
             
             if ischar(obj.DataFileLocation)
-                obj.Data.DataFileLocation  = obj.DataFileLocation;
+                obj.Data.DataFileLocation  = obj.DataFileLocation; 
                 load(obj.DataFileLocation, 'data')
             elseif isstruct(obj.DataFileLocation)
                 obj.Data.DataFileLocation  = 'Manual Input';
                 data = obj.DataFileLocation;
             end
-            
+
             try
                 data.lab_bip = data.bib_lab;
             catch
             end
             % read
             if  isfield(data, 'Datasetup')
-                obj.Data.dataSetup = data.Datasetup;% Electrode dimensions
+                obj.Data.dataSetup = data.Datasetup;% Electrode dimensions  
             else
                 obj.Data.dataSetup = [];
             end
             
             [sign, chanNames]           = Core.ParaAndData.getSignal(data.x_bip, data.lab_bip, chanContains);
             obj.Data.signal             = sign;
-            obj.Data.channelNames       = chanNames;
-            obj.Data.sampFreq           = data.fs;
+            obj.Data.channelNames       = chanNames;  
+            obj.Data.sampFreq           = data.fs;  
             
             % intermediate values
             lenSig = length(obj.Data.signal);
@@ -65,11 +71,12 @@ classdef ParaAndData
             obj.Data.maxIntervalToJoin  = maxToJoinPARA*fs;
             obj.Data.MinHighEntrIntvLen = MinHiEntrPARA*fs;
             obj.Data.minEventTime       = minETPARA*fs;
+            obj.Data.maxEventTime       = maxETPARA*fs;
             obj.Data.sigDurTime         = sigdur;
-            if startBaseline  == 1
-                obj.Data.timeInterval       = [startBaseline, durBaseline];
+            if startBasline  == 1
+            obj.Data.timeInterval       = [startBasline, durBaseline]; 
             else
-                obj.Data.timeInterval       = [startBaseline, startBaseline + durBaseline];
+            obj.Data.timeInterval       = [startBasline, startBasline + durBaseline];
             end
             obj.Data.nbChannels         = nbChan;
             obj.Data.nbSamples          = nbSamples;
@@ -81,10 +88,11 @@ classdef ParaAndData
         
         %% Test detector parameters against data for consistency
         function [] = testParameters(obj)
-            LowPass  = obj.Para.lowPass;
+            % Input: parameters, data and meta data (all computed above)
+            % Output: warnings and errors if inconistencies are detected.
+            LowPass  = obj.Para.lowPass; 
             HighPass = obj.Para.highPass;
-            
-            
+
             if HighPass > LowPass
                 warning(['Low pass frequency ' ,char(LowPass), ' must be higher than High pass frequency ', char(HighPass)])
             end
@@ -94,15 +102,17 @@ classdef ParaAndData
             sigDur = obj.Data.sigDurTime;
             
             assert(startBl > 0,'Baseline start set in negative time.')
-            if (DurBl + startBl < sigDur)
-                disp( 'Set-Baseline time segment exceeds signal.')
+            if (DurBl + startBl > sigDur)
+             disp( 'Set-Baseline time segment exceeds signal.')
             end
-            
         end
         
     end
     methods(Static)
         function [signal, chanNames] = getSignal(x_bip, lab_bip, chanContains)
+            % Input: signal, channel labels, cell of strings
+            %extracts channel data of channels with names containing 'chanContains'
+            % output: selected signal and channel labels
             maskChanContains = contains(lab_bip, chanContains);
             if min(size(x_bip)) == 1
                 signal        = x_bip';
@@ -113,7 +123,7 @@ classdef ParaAndData
             
         end
         
-        %% Sorting Electrodes
+        %% sorting Electrodes
         function electrodeInfo = sortElectrodes(chan_names)
             % this function looks at the given names of the electrode
             % contacts and then decides whether it is scalp, ECoG or iEEG
@@ -121,7 +131,7 @@ classdef ParaAndData
             if any(contains(chan_names,{'A' 'C' 'F' 'P' 'O' 'Fp' 'T'}))
                 ElecType = 'Scalp';
             else
-                ElecType = 'Unknown';
+                ElecType = 'Unknown'; 
             end
             
             mask.Left     = contains(chan_names,{'1' '3' '5' '7'});

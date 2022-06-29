@@ -1,5 +1,19 @@
-function [ Markings_ToValidate_Out ] = ValidateHFO( rhfo, frhfo, RFRhfo, ValidationInterfaceParams )
+function [Markings_ToValidate_Out] = ValidateHFO(rhfo, frhfo, RFRhfo,  ValidationInterfaceParams, ImageSaveDir)
+if nargin  == 4
+   ImageSaveDir = [cd,'\Images\']; 
+end
+%% %%%%%%%%%%%%%% This comes from ECE
+%%Paths
+% strPaths.Main = '\\fl-daten\NCH_Forschungen\NCH_FL_Forschungsprojekte\Epilepsy\_Master Students\Katja Rutz\Intraoperative HFO Validation HD 2\';
+% strPaths.HFOAnalysisResults = '\\fl-daten\NCH_Forschungen\NCH_FL_Forschungsprojekte\Epilepsy\_Master Students\Maxine Schreiber\HFO Analysis Results\HFO Analysis 1 Extracted Data Added Channels 190111\' ; % [strPaths.Main,'HFO Analysis Results\'];
+% strPaths.Data = '\\fl-daten\NCH_Forschungen\NCH_FL_Forschungsprojekte\Epilepsy\_Master Students\Maxine Schreiber\Results\Extracted Data Added Channels\'; % [strPaths.Main,'Data\'];
+% strPaths.HFOValidationResults = [strPaths.Main,'HFO Validation Results\'];
+% strPaths.ImagesExamplesOfEvents = [strPaths.Main,'Examples of Events\'];
+% addpath(genpath(strPaths.Main))
 
+% File names for saving results
+
+%% %%%%%%%%%%%%%%%%%
 %% Markings for different HFO bands
 if(isempty(rhfo))
     hfo{1} = [];
@@ -20,27 +34,16 @@ end
 fs = rhfo.Data.sampFreq;
 Markings_ToPlot = {};
 for iEventType = 1:3
-    if(~isempty(hfo{iEventType}))
-        Markings_ToPlot{iEventType} = getEventViewerMatrix(hfo{iEventType},fs);
-    end
+    Markings_ToPlot{iEventType} = getEventViewerMatrix(hfo{iEventType},fs);
+    % Markings_ToPlot{iEventType} = Markings_ToPlot{iEventType}(1:50,:); % Plot first 50 events
 end
 
 %% Data input
 dataAll = {};
 for nChannel = 1:frhfo.Data.nbChannels
-    if(~isfield(VParams.FilterCoeff))
     dataAll{1}(nChannel,:)    = rhfo.Data.signal(:,nChannel)';
     dataAll{2}(nChannel,:)    = rhfo.filtSig.filtSignal(:,nChannel)';
     dataAll{3}(nChannel,:)    = frhfo.filtSig.filtSignal(:,nChannel)';
-    else
-        % Filter data TODO
-        fprintf('\n\n\n')
-        warning('Think about filtering!!!')
-        fprintf('\n\n\n')
-        dataAll{1}(nChannel,:)    = rhfo.Data.signal(:,nChannel)';
-        dataAll{2}(nChannel,:)    = filtfilt(rhfo.Data.signal(:,nChannel),VParams.FilterCoeff.Rb,VParams.FilterCoeff.Ra)';
-        dataAll{3}(nChannel,:)    = filtfilt(rhfo.Data.signal(:,nChannel),VParams.FilterCoeff.FRb,VParams.FilterCoeff.FRa)';
-    end
 end
 
 %% Validation GUI inputs
@@ -49,28 +52,35 @@ ValidationInterfaceParams.dataFiltered = dataAll(2:3);
 ValidationInterfaceParams.fs = fs;
 ValidationInterfaceParams.ElectrodeLabels = strrep(rhfo.Data.channelNames,'_','\_');
 ValidationInterfaceParams.Markings_ToPlot = Markings_ToPlot;
-ValidationInterfaceParams.strSaveImagesFolderPath = [cd,'\Images\'];
+ValidationInterfaceParams.strSaveImagesFolderPath = ImageSaveDir;
 ValidationInterfaceParams.Markings_ToValidate = ValidationInterfaceParams.Markings_ToPlot{ValidationInterfaceParams.HFOType_ToValidate};
+ValidationInterfaceParams.YShift = 350;
 
 %% Run validation GUI
-if(isempty(ValidationInterfaceParams.Markings_ToValidate))
-    Markings_ToValidate_Out = [];
-else
-    Markings_ToValidate_Out = ...
-        HFO_Visualizer_190601(ValidationInterfaceParams);
-end
+% ValidationInterfaceParams.Markings_ToPlot{1} = [];
+% ValidationInterfaceParams.Markings_ToPlot{2} = [];
+Markings_ToValidate_Out = ...
+    HFO_Visualizer_190601(ValidationInterfaceParams);
 
 end
 
-function [ Markings ] = getEventViewerMatrix( hfo, fs )
+function Markings = getEventViewerMatrix(hfo,fs)
 
 Markings = [];
-marks = hfo.RefinedEvents{1}.Markings;
+marks = hfo.Events.Markings;
 for iChannel = 1:length(marks.start)
-    nNumberOfEvents = length(marks.start{iChannel});
-    EventBlock = [ones(nNumberOfEvents,1)*iChannel,([marks.start{iChannel}(:),marks.end{iChannel}(:),marks.len{iChannel}(:)]-1)/fs];
-    Markings = [Markings;EventBlock];
+    nbEvents = length(marks.start{iChannel});
+    
+%     EventBlock = [ones(nbEvents,1)*iChannel,([marks.start{iChannel}',marks.end{iChannel}',marks.len{iChannel}']-1)/fs];
+     try
+    EventBlock = [ones(nbEvents,1)*iChannel,([marks.start{iChannel}',marks.end{iChannel}',marks.len{iChannel}']-1)/fs];
+    catch
+    EventBlock = [ones(nbEvents,1)*iChannel,([marks.start{iChannel},marks.end{iChannel},marks.len{iChannel}]-1)/fs];   
+    end
+    Markings  = [Markings; EventBlock];
 end
 
 end
+
+
 
