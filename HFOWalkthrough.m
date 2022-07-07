@@ -17,9 +17,9 @@ hfo = Core.HFO;
 %% The data and parameters can be loaded from 
 %% Specify the paths for .mat files for the parameters and date (see README for format of these files)
 %% Parameters
-hfo.ParaFileLocation = [strPaths.HFODetector, '/+Demo/Spec/ECoG/Parameters/RSpecPara.mat'];
+hfo.ParaFileLocation = [strPaths.HFODetector, '/+Demo/Morph/Parameters/RMorphPara.mat'];
 % see the contents of the folder "PresetParameterCreator" for the format.
-hfo.DataFileLocation = [strPaths.HFODetector, '/+Demo/Spec/ECoG/Data/Data.mat'];
+hfo.DataFileLocation = [strPaths.HFODetector, '/+Demo/Morph/Data/Data.mat'];
 % Data must be called "data" and must contain the following fields
 % data.Datasetup
 % data.x_bip 
@@ -38,16 +38,19 @@ hfo = getFilteredSignal(hfo, smoothBool);
 % smoothBool: boolean value specifying if the envelope is to be smoothed.
 %% Events are described in contradiction to the background which is
 % defind by the baseline. This code computes the baseline using entropy.
-hfo = getBaseline(hfo); 
+hfo = getBaselineEntropy(hfo); 
 %% Events are detected by various means
 RefType   = 'spec';
 CondMulti = true;
-hfo = getEvents(hfo, RefType);
+hfo = getEventsOfInterest(hfo, RefType);
 % RefType: is a string value, either 'morph', 'spec', 'specECoG' and 'specScalp'
 %% Visualize the HFO by calling
 SigString = 'filt';
 chanInd = [1,2,3];
-Visualizations.VisualizeHFO(hfo, SigString, chanInd)
+Modality          = 'iEEG';
+ChanNames         = hfo.Data.channelNames;
+VParams           = Visual.getVParams(Modality, ChanNames);
+Visual.ValidateHFO(hfo,hfo,hfo, SigString, chanInd)
 % SigString: is a string variable which is either: 'filt' or 'raw'
 % chanInd: are the indices of the channels from which to view the data
 %% %%%%%%%%%%%%%%%%%%%%%%%% Wrapped %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
