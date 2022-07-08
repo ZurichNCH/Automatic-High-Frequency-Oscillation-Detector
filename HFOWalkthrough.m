@@ -40,17 +40,16 @@ hfo = getFilteredSignal(hfo, smoothBool);
 % defind by the baseline. This code computes the baseline using entropy.
 hfo = getBaselineEntropy(hfo); 
 %% Events are detected by various means
-RefType   = 'spec';
-CondMulti = true;
+RefType   = 'morph';
 hfo = getEventsOfInterest(hfo, RefType);
 % RefType: is a string value, either 'morph', 'spec', 'specECoG' and 'specScalp'
 %% Visualize the HFO by calling
 SigString = 'filt';
-chanInd = [1,2,3];
+chanInd = [1 2 3];
 Modality          = 'iEEG';
-ChanNames         = hfo.Data.channelNames;
-VParams           = Visual.getVParams(Modality, ChanNames);
-Visual.ValidateHFO(hfo,hfo,hfo, SigString, chanInd)
+ChanNames         = {hfo.Data.channelNames{chanInd}};
+VParams           = Visual.getVParams(Modality,hfo.Data.channelNames, ChanNames);
+Visual.ValidateHFO(hfo,hfo,hfo, VParams,[])
 % SigString: is a string variable which is either: 'filt' or 'raw'
 % chanInd: are the indices of the channels from which to view the data
 %% %%%%%%%%%%%%%%%%%%%%%%%% Wrapped %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -61,7 +60,6 @@ clc
 ParaPath = [pwd, '\+Demo\Morph\Parameters\RMorphPara.mat'];
 DataPath = [pwd, '\+Demo\Morph\Data\Data.mat'];
 RefType         = 'morph'; 
-% CondMulti       = false;
 AnalysisDepth   = 3;
 chanContains    = '';
 smoothBool      = true;
@@ -97,8 +95,8 @@ RFRhfo = Core.CoOccurence.getRFRevents(rhfo, frhfo, CoOccurenceInfo);
 
 % Validate the co-occurence of Ripples and Fast ripples
 Modality          = 'iEEG';
-ChanNames         = hfo.Data.channelNames;
-VParams           = Visual.getVParams(Modality, ChanNames);
+ChanNames         = rhfo.Data.channelNames;
+VParams           = Visual.getVParams(Modality,ChanNames);
 % Validation interface params (VParams) can include: 
 %-data: all the data or a data segment
 %-dataFiltered: the filtered version of the data
