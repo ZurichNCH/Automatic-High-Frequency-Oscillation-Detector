@@ -30,10 +30,17 @@ if(isempty(RFRhfo))
 else
     hfo{3} = RFRhfo;
 end
-
+switch ValidationInterfaceParams.HFOType_ToValidate
+    case 1
+        evClass = 1;
+    case 2
+        evClass = [1 2];
+    case 3
+        evClass = [1 2 3];
+end
 fs = rhfo.Data.sampFreq;
 Markings_ToPlot = {};
-for iEventType = 1:3
+for iEventType = evClass
     Markings_ToPlot{iEventType} = getEventViewerMatrix(hfo{iEventType},fs);
     % Markings_ToPlot{iEventType} = Markings_ToPlot{iEventType}(1:50,:); % Plot first 50 events
 end
