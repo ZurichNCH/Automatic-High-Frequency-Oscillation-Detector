@@ -11,7 +11,7 @@ function [] = getFilterPara(bandString)
     end
 
     % Save filter
-    fileName = ['/', 'FilterPara', bandString];
+    fileName = [filesep, 'FilterPara', bandString];
     save([pwd, fileName],'FilterPara')
 end
 

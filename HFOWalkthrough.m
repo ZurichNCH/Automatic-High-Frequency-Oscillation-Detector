@@ -17,9 +17,9 @@ hfo = Core.HFO;
 %% The data and parameters can be loaded from 
 %% Specify the paths for .mat files for the parameters and date (see README for format of these files)
 %% Parameters
-hfo.ParaFileLocation = [strPaths.HFODetector, '/+Demo/Spec/ECoG/Parameters/RSpecPara.mat'];
+hfo.ParaFileLocation = [strPaths.HFODetector, filesep, '+Demo', filesep,'Spec', filesep,'ECoG', filesep,'Parameters', filesep,'RSpecPara.mat'];
 % see the contents of the folder "PresetParameterCreator" for the format.
-hfo.DataFileLocation = [strPaths.HFODetector, '/+Demo/Spec/ECoG/Data/Data.mat'];
+hfo.DataFileLocation = [strPaths.HFODetector, filesep, '+Demo', filesep,'Spec', filesep,'ECoG', filesep,'Data', filesep,'Data.mat'];
 % Data must be called "data" and must contain the following fields
 % data.Datasetup
 % data.x_bip 
@@ -38,16 +38,21 @@ hfo = getFilteredSignal(hfo, smoothBool);
 % smoothBool: boolean value specifying if the envelope is to be smoothed.
 %% Events are described in contradiction to the background which is
 % defind by the baseline. This code computes the baseline using entropy.
-hfo = getBaseline(hfo); 
+hfo = getBaselineSTD(hfo); 
 %% Events are detected by various means
 RefType   = 'spec';
 CondMulti = true;
-hfo = getEvents(hfo, RefType);
+hfo = getEventsOfInterest(hfo, RefType);
 % RefType: is a string value, either 'morph', 'spec', 'specECoG' and 'specScalp'
 %% Visualize the HFO by calling
-SigString = 'filt';
-chanInd = [1,2,3];
-Visualizations.VisualizeHFO(hfo, SigString, chanInd)
+% SigString = 'filt';
+% chanInd = [1,2,3];
+% Visualizations.VisualizeHFO(hfo, SigString, chanInd)
+Modality          = 'iEEG';
+ChanNames         = hfo.Data.channelNames;
+VParams           = Visual.getVParams(Modality, ChanNames);
+% SigString = 'raw';
+Visual.ValidateHFO(hfo,hfo,hfo, VParams)
 % SigString: is a string variable which is either: 'filt' or 'raw'
 % chanInd: are the indices of the channels from which to view the data
 %% %%%%%%%%%%%%%%%%%%%%%%%% Wrapped %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,8 +60,8 @@ Visualizations.VisualizeHFO(hfo, SigString, chanInd)
 clear
 clc
 %% The above can be collected in the following  wrapper:
-ParaPath = [pwd, '\+Demo\Morph\Parameters\RMorphPara.mat'];
-DataPath = [pwd, '\+Demo\Morph\Data\Data.mat'];
+ParaPath = [pwd, filesep, '+Demo', filesep,'Morph', filesep,'Parameters', filesep,'RMorphPara.mat'];
+DataPath = [pwd, filesep, '+Demo', filesep,'Morph', filesep,'Data', filesep,'Data.mat'];
 RefType         = 'morph'; 
 % CondMulti       = false;
 AnalysisDepth   = 3;
@@ -76,9 +81,9 @@ Visual.ValidateHFO(hfo,hfo,hfo, VParams)
 clear
 clc
 %% Difference in ripples and fast ripples is that they are computed using different parameters.
-rParaPath       = [pwd, '\+Demo\Morph\Parameters\RMorphPara.mat'];
-frParaPath      = [pwd, '\+Demo\Morph\Parameters\FRMorphPara.mat'];
-DataPath        = [pwd, '\+Demo\Morph\Data\Data.mat'];
+rParaPath       = [pwd, filesep, '+Demo', filesep,'Morph', filesep,'Parameters', filesep,'RMorphPara.mat'];
+frParaPath      = [pwd, filesep, '+Demo', filesep,'Morph', filesep,'Parameters', filesep,'FRMorphPara.mat'];
+DataPath        = [pwd, filesep, '+Demo', filesep,'Morph', filesep,'Data', filesep,'Data.mat'];
 RefType         = 'morph'; 
 AnalysisDepth   = 3;
 chanContains    = '';
@@ -94,7 +99,7 @@ RFRhfo = Core.CoOccurence.getRFRevents(rhfo, frhfo, CoOccurenceInfo);
 
 % Validate the co-occurence of Ripples and Fast ripples
 Modality          = 'iEEG';
-ChanNames         = hfo.Data.channelNames;
+ChanNames         = rhfo.Data.channelNames;
 VParams           = Visual.getVParams(Modality, ChanNames);
 % Validation interface params (VParams) can include: 
 %-data: all the data or a data segment
