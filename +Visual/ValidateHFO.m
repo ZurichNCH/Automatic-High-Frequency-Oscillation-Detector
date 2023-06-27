@@ -1,6 +1,6 @@
 function [Markings_ToValidate_Out] = ValidateHFO(rhfo, frhfo, RFRhfo,  ValidationInterfaceParams, ImageSaveDir)
 if nargin  == 4
-   ImageSaveDir = [cd,'\Images\']; 
+   ImageSaveDir = [cd, filesep,'Images', filesep]; 
 end
 %% %%%%%%%%%%%%%% This comes from ECE
 %%Paths
