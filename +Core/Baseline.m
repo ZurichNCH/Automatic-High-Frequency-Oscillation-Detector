@@ -4,6 +4,7 @@ classdef Baseline
         Output
     end
     methods
+    %% test
 %% Set the noise threshold        
         function obj = setBaselineMaxNoisemuV(obj)
             % input: parameters, data and signal
