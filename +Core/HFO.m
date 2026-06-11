@@ -1,8 +1,8 @@
 classdef HFO
    properties
 %% Meta 
-      ParaFileLocation = 'No set path'; 
-      DataFileLocation = 'No set path'; 
+      ParaFileLocation = [pwd, '\+Demo\Morph\Parameters\RMorphPara.mat'];
+      DataFileLocation = [pwd, '\+Demo\Morph\Data\Data.mat'];
 %% STAGE O.1 Parameters
       Para           
 %% STAGE O.2 Data

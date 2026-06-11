@@ -228,7 +228,7 @@ if(~isempty(InputParams.Markings_ToValidate))
 end
 
 %% Initialize event count and center of time axis
-handles.nEvent = 0;
+handles.nEvent = 1;
 handles.tMiddle = [];
 
 %% Save image for whole signal
